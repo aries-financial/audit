@@ -171,7 +171,7 @@ contract StrategyDForceDAI {
     address constant public unirouter = address(0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D);
     address constant public weth = address(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2); // used for df <> weth <> usdc route
 
-    address constant public yfii = address(0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83);
+    address constant public afi = address(0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83);
 
 
     uint public strategyfee = 0;
@@ -186,7 +186,7 @@ contract StrategyDForceDAI {
     address public governance;
     address public strategyDev;
     address public controller;
-    address public burnAddress = 0xB6af2DabCEBC7d30E440714A33E5BD45CEEd103a;
+    //address public burnAddress = 0xB6af2DabCEBC7d30E440714A33E5BD45CEEd103a;
 
     string public getName;
 
@@ -198,7 +198,7 @@ contract StrategyDForceDAI {
         governance = msg.sender;
         controller = 0x8C2a19108d8F6aEC72867E9cfb1bF517601b515f;
         getName = string(
-            abi.encodePacked("yfii:Strategy:",
+            abi.encodePacked("afi:Strategy:",
             abi.encodePacked(IERC20(want).name(),"DF Token"
             )
             ));
@@ -293,18 +293,18 @@ contract StrategyDForceDAI {
 
     function doswap() internal {
         uint256 _2token = IERC20(output).balanceOf(address(this)).mul(90).div(100); //90%
-        uint256 _2yfii = IERC20(output).balanceOf(address(this)).mul(10).div(100);  //10%
+        uint256 _2afi = IERC20(output).balanceOf(address(this)).mul(10).div(100);  //10%
         UniswapRouter(unirouter).swapExactTokensForTokens(_2token, 0, swap2TokenRouting, address(this), now.add(1800));
-        UniswapRouter(unirouter).swapExactTokensForTokens(_2yfii, 0, swap2YFIIRouting, address(this), now.add(1800));
+        UniswapRouter(unirouter).swapExactTokensForTokens(_2afi, 0, swap2AFIRouting, address(this), now.add(1800));
     }
     function dosplit() internal{
-        uint b = IERC20(yfii).balanceOf(address(this));
+        uint b = IERC20(afi).balanceOf(address(this));
         uint _fee = b.mul(fee).div(max);
         uint _callfee = b.mul(callfee).div(max);
         uint _burnfee = b.mul(burnfee).div(max);
         IERC20(yfii).safeTransfer(Controller(controller).rewards(), _fee); //4%  3% team +1% insurance
         IERC20(yfii).safeTransfer(msg.sender, _callfee); //call fee 1%
-        IERC20(yfii).safeTransfer(burnAddress, _burnfee); //burn fee 5%
+        //IERC20(yfii).safeTransfer(burnAddress, _burnfee); //burn fee 5%
 
         if (strategyfee >0){
             uint _strategyfee = b.mul(strategyfee).div(max);
