@@ -202,7 +202,7 @@ contract StrategyDForceDAI {
             abi.encodePacked(IERC20(want).name(),"DF Token"
             )
             ));
-        swap2YFIIRouting = [output,weth,yfii];
+        swap2YFIIRouting = [output,weth,afi];
         swap2TokenRouting = [output,weth,want];
         doApprove();
         strategyDev = tx.origin;
@@ -287,7 +287,7 @@ contract StrategyDForceDAI {
         dRewards(pool).getReward();
 
         doswap();
-        dosplit();//分yfii
+        dosplit();
         deposit();
     }
 
@@ -302,13 +302,13 @@ contract StrategyDForceDAI {
         uint _fee = b.mul(fee).div(max);
         uint _callfee = b.mul(callfee).div(max);
         uint _burnfee = b.mul(burnfee).div(max);
-        IERC20(yfii).safeTransfer(Controller(controller).rewards(), _fee); //4%  3% team +1% insurance
-        IERC20(yfii).safeTransfer(msg.sender, _callfee); //call fee 1%
-        //IERC20(yfii).safeTransfer(burnAddress, _burnfee); //burn fee 5%
+        IERC20(afi).safeTransfer(Controller(controller).rewards(), _fee); //4%  3% team +1% insurance
+        IERC20(afi).safeTransfer(msg.sender, _callfee); //call fee 1%
+        //IERC20(afi).safeTransfer(burnAddress, _burnfee); //burn fee 5%
 
         if (strategyfee >0){
             uint _strategyfee = b.mul(strategyfee).div(max);
-            IERC20(yfii).safeTransfer(strategyDev, _strategyfee);
+            IERC20(afi).safeTransfer(strategyDev, _strategyfee);
         }
     }
 
